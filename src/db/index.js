@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from 'dotenv'
-import { DB_NAME } from "../src/constants.js";
+import { DB_NAME } from "../constants.js";
 dotenv.config()
 
 async function connectDb() {
