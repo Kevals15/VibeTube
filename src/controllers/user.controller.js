@@ -97,4 +97,75 @@ const registerUser = asyncHandler(async (req, res) => {
     )
 })
 
-export default registerUser;
+const loginUser = asyncHandler(async (req, res) => {
+
+
+    const generateAccessTokenrefreshToken = async (userId) => {
+        const user = await User.findById(userId);
+        const accessToken = await generateAccessToken();
+        const refreshToken = await generateRefreshToken();
+        user.refreshToken = refreshToken;
+
+        await user.save({
+            validateBeforeSave: false
+        })
+
+        return { accessToken, refreshToken };
+
+    }
+
+    // Steps
+    // take username or email and password from req.body
+    // check the user for username or email
+    // check the password
+    // accessToken and refreshToken
+    // send data with cookie
+
+    const { username, email, password } = req.body;
+
+    if (!username || !email) {
+        throw new ApiError(400, "username or email required")
+    }
+
+    const user = await User.findOne({
+        $or: [{ username }, { email }]
+    })
+
+    if (!user) {
+        throw new ApiError(404, "User doesnt exist")
+    }
+
+    const isValidPassword = await isCorrectPassword(password);
+
+    if (!isValidPassword) {
+        throw new ApiError(401, "Invalid user credentials")
+    }
+
+    const { accessToken, refreshToken } = await generateAccessTokenrefreshToken(user._id);
+
+    // now this user has some unnecessary fields that we dont want to send to user like password and refreshToken so in this user refreshToken is empty now either we modify this user or we can again use query
+
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+
+    // Send data Throw cookies
+    // option object ensure that cookie is only modified from server side using httpOnly 
+
+    const option = {
+        httpOnly: true,
+        secure: true
+    }
+
+    res.status(200)
+        .cookie("accessToken", accessToken, option)
+        .cookie("refreshToken", refreshToken, option)
+        .json(
+            new Apiresponse(200, {
+                user: loggedInUser, refreshToken, accessToken,
+
+            },
+                "User Loggedin successfully")
+        )
+
+})
+
+export { registerUser };
