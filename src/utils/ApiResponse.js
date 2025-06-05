@@ -6,6 +6,7 @@
 // Server Response Error (500-599)
 
 
+
 class Apiresponse {
     constructor(statuscode, data, message = "success") {
         this.statuscode = statuscode;
@@ -14,3 +15,5 @@ class Apiresponse {
         this.success = statuscode < 400;
     }
 }
+
+export default Apiresponse
