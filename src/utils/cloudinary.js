@@ -14,7 +14,8 @@ const FileUploader = async (FilePath) => {
         const response = await cloundinary.uploader.upload(FilePath, {
             resource_type: "auto"
         })
-        console.log("File is uploaded ", response.url);
+        // console.log("File is uploaded ", response.url);
+        fs.unlinkSync(FilePath);
         return response;
     } catch (error) {
         fs.unlinkSync(FilePath);

@@ -15,11 +15,10 @@ const registerUser = asyncHandler(async (req, res) => {
     // remove password and refreshtoken from response
     // return res
 
-    const { fullName, email, username, password } = req.body;
-    console.log("email : ", email, "password : ", password);
+    const { fullname, email, username, password } = req.body;
 
     if (
-        [fullName, email, username, password].some((field) => field?.trim() === "")
+        [fullname, email, username, password].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "all fields are required");
     }
@@ -35,7 +34,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // we can use $ sugn for condition and or nor 
     //  we can use findone method that return the first user that satisfied condition 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or: [{ username }, { email }]
     })
 
@@ -43,8 +42,16 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(409, "Username or email already exists");
     }
 
+    console.log(req.files);
+
     const avatarLocalPath = req.files?.avatar[0].path;
-    const coverImageLocalPath = req.files?.coverImage[0].path;
+    // const coverImageLocalPath = req.files?.coverImage[0].path;
+
+    // check if coverfile is there or not
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path;
+    }
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "avatar is required");
@@ -54,7 +61,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
     const avatar = await FileUploader(avatarLocalPath);
-    const coverImage = await FileUploader(coverImageLocalPath);
+    const CoverImage = await FileUploader(coverImageLocalPath);
 
     if (!avatar) {
         throw new ApiError(400, "avatar is required");
@@ -62,9 +69,9 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // Create User Object In Db
     const user = await User.create({
-        fullName,
+        fullname,
         avatar: avatar.url,
-        coverImage: coverImage?.url || "", //if not available then ""
+        coverimage: CoverImage?.url || "", //if not available then ""
         username: username.toLowerCase(),
         email,
         password
