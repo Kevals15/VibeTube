@@ -147,17 +147,17 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
-    // Send data Throw cookies
+    // Send data Through cookies
     // option object ensure that cookie is only modified from server side using httpOnly 
 
-    const option = {
+    const options = {
         httpOnly: true,
         secure: true
     }
 
     res.status(200)
-        .cookie("accessToken", accessToken, option)
-        .cookie("refreshToken", refreshToken, option)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
         .json(
             new Apiresponse(200, {
                 user: loggedInUser, refreshToken, accessToken,
@@ -168,4 +168,37 @@ const loginUser = asyncHandler(async (req, res) => {
 
 })
 
-export { registerUser };
+const logoutUser = asyncHandler(async (req, res) => {
+    // Steps
+    // first of all remove all cookies
+    // and also refreshToken
+    // Here we cannot find user by id because we dont have any field that identify particular user for logout so we can create our own middleware for verify User
+
+
+    // Now if middleware is executed completely that means now logoutUser has access of req.user so we can easily find user by req.user._id
+
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set: {
+                refreshToken: undefined
+            }
+        },
+        {
+            new: true
+        }
+    )
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res
+        .status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .json(new Apiresponse(200, {}, "logged out"))
+})
+
+export { registerUser, loginUser, logoutUser };

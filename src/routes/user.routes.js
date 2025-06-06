@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { registerUser } from "../controllers/user.controller.js";
+import { loginUser, logoutUser, registerUser } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js"
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 // if request comes from post /users from app.js is the request is users/register it calls the function registerUser from controller user.controller.js
@@ -23,5 +24,13 @@ router.route("/register").post(
     ]),
     registerUser
 );
+
+router.route("/login").post(loginUser)
+
+// secure routes whoever user logged in only they get this routes
+
+// here before calling logoutUser we can first send it to middleware to verifyJWT and then using next() it knows that next in queue for execute is logoutuser
+
+router.route("/logout").post(verifyJWT, logoutUser)
 
 export default router;
