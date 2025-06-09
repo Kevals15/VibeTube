@@ -75,7 +75,33 @@ const getAllsubscribersList = asyncHandler(async (req, res) => {
 
 })
 
+const getSubscribedChannels = asyncHandler(async (req, res) => {
+    const { subscriberId } = req.params
+
+    if (!subscriberId) {
+        throw new ApiError(400, "No channel subscribed")
+    }
+
+    const channels = await Subscription.find(
+        {
+            subscriber: subscriberId
+        }
+    ).populate("channel", "fullname avatar username")
+
+    if (channels?.length == 0) {
+        throw new ApiError(400, "No channels found")
+    }
+
+    return res
+        .status(200)
+        .json(
+            new Apiresponse(200, channels, "Channels fetched")
+        )
+})
+
+
 export {
     toggleSubscription,
-    getAllsubscribersList
+    getAllsubscribersList,
+    getSubscribedChannels
 }
