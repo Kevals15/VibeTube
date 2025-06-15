@@ -6,4 +6,4 @@ const router = Router()
 router.route("/addcomment/:videoId").post(verifyJWT, addComment)
 router.route("/updatecomment/:commentId").patch(verifyJWT, updateComment)
 router.route("/deletecomment/:commentId").delete(verifyJWT, deleteComment)
-export default router
+export default router;
