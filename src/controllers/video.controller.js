@@ -157,10 +157,61 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
         .json(new Apiresponse(200, video, "toggle video status"))
 })
 
+
+const getAllVideos = asyncHandler(async (req, res) => {
+
+    // Steps
+    // 1. find the number of page you want to skip
+    // 2. filter video based on query use title or description whatever you want
+    // 3. if you want perticular users video so you can also give userid so it can search based on this
+    // 4. if not query it shows all videos
+    // 5. pass sorttype and sortby so we can sort by views likes and etc..
+    // 6. if not anything passed it shows according latest video first
+    // 7. after this mongoose knows 1 as ascending and -1 as desc
+    // 8. after that find video based on filter sort on sortoption 
+
+
+    const { page = 1, limit = 10, query, sortType, sortBy, userId } = req.query
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const filter = {}
+
+    if (query) {
+        filter.title = { $regex: query, $options: "i" }
+    }
+    if (userId) {
+        filter.owner = userId
+    }
+
+    const sortOption = {}
+
+    if (sortBy) {
+        sortOption[sortBy] = sortType === "asc" ? 1 : -1;
+    } else {
+        sortOption["createdAt"] = -1;
+    }
+
+
+    const findVideos = await Video
+        .find(filter)
+        .sort(sortOption)
+        .skip(skip)
+        .limit(Number(limit))
+        .populate("owner", "username avatar")
+
+    return res
+        .status(200)
+        .json(
+            new Apiresponse(200, findVideos, "Videos fetched")
+        )
+})
+
 export {
     PublishVideo,
     getVideoById,
     updateVideo,
     deleteVideo,
-    togglePublishStatus
+    togglePublishStatus,
+    getAllVideos
 }
