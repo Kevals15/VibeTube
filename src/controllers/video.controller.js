@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import Apiresponse from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { FileUploader } from "../utils/cloudinary.js";
-
+import { Like } from "../models/like.models.js";
 
 const PublishVideo = asyncHandler(async (req, res) => {
     const { title, description } = req.body;
@@ -66,12 +66,17 @@ const getVideoById = asyncHandler(async (req, res) => {
 
     const video = await Video.findOne({ _id: videoId, isPublished: true })
         // populate method takes argument first the field you want to populate in this case its owner field and second for which field you want to grab
-        .populate("owner", "fullname avatar username")
+        .populate("owner", "avatar username")
         .exec()
 
     if (!video) {
         throw new ApiError(400, "video doesnt exist")
     }
+
+    video.views += 1
+    await video.save({
+        validateBeforeSave: false
+    })
 
     return res
         .status(200)
@@ -199,6 +204,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         .skip(skip)
         .limit(Number(limit))
         .populate("owner", "username avatar")
+        .lean()
 
     return res
         .status(200)

@@ -41,13 +41,19 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
                 likedBy: req.user?._id
             }
         )
+        video.likes += 1
         liked = true;
     } else {
         await Like.deleteOne({
             _id: existinglikeonvideo?._id
         })
+        video.likes = Math.max(0, video.likes - 1)
         liked = false;
     }
+
+    await video.save({
+        validateBeforeSave: false
+    })
 
     const responseData = liked ? { liked, like } : { liked };
 
@@ -85,6 +91,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
 
     if (existlikeoncomment) {
         await Like.deleteOne({ _id: existlikeoncomment?._id })
+        comment.likes = Math.max(0, comment.likes - 1)
         liked = false;
     }
     else {
@@ -92,8 +99,11 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
             comment: commentId,
             likedBy: req.user?._id
         })
+        comment.likes += 1
         liked = true
     }
+
+    await comment.save({ validateBeforeSave: false })
 
     const responseData = liked ? { liked, like } : { liked };
 
@@ -134,6 +144,7 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 
     if (existlikeontweet) {
         await Like.deleteOne({ _id: existlikeontweet?._id })
+        tweet.likes = Math.max(0, tweet.likes - 1)
         liked = false;
     }
     else {
@@ -141,8 +152,11 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
             tweet: tweetId,
             likedBy: req.user?._id
         })
+        tweet.likes += 1
         liked = true;
     }
+
+    await tweet.save({ validateBeforeSave: false })
 
     const responseData = liked ? { liked, like } : { liked }
 
