@@ -37,7 +37,7 @@ const registerUser = asyncHandler(async (req, res) => {
     // we can use $ sugn for condition and or nor 
     //  we can use findone method that return the first user that satisfied condition 
     const existedUser = await User.findOne({
-        $or: [{ username }, { email }]
+        $or: [{ username:username?.toLowerCase() }, { email }]
     })
 
     if (existedUser) {
@@ -51,8 +51,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // check if coverfile is there or not
     let coverImageLocalPath;
-    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
-        coverImageLocalPath = req.files.coverImage[0].path;
+    if (req.files && Array.isArray(req.files.coverimage) && req.files.coverimage.length > 0) {
+        coverImageLocalPath = req.files.coverimage[0].path;
     }
 
     if (!avatarLocalPath) {
@@ -228,7 +228,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             throw new ApiError(401, "token is expired or used")
         }
 
-        const { accessToken, newrefreshToken } = generateAccessTokenrefreshToken(user._id)
+        const { accessToken, newrefreshToken } = await generateAccessTokenrefreshToken(user._id)
 
         const options = {
             httpOnly: true,
@@ -256,7 +256,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user?._id)
 
-    const isPasswordCorrect = user.isCorrectPassword(oldPassword)
+    const isPasswordCorrect = await user.isCorrectPassword(oldPassword)
 
     if (!isPasswordCorrect) {
         throw new ApiError(401, "Password is incorrect")
