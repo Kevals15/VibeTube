@@ -142,6 +142,11 @@ const deleteVideoFromPlaylist = asyncHandler(async (req, res) => {
         throw new ApiError(400, "videoId is missing")
     }
 
+    const video = await Video.findById(videoId)
+
+    if (!video) {
+        throw new ApiError(400, "video is not found in playlist")
+    }
 
     // filterout videos except from params
     playlist.videos = playlist.videos.filter((item) => item.video.toString() !== videoId)
@@ -162,7 +167,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
     }
 
     const playlist = await Playlist.findById(playlistId)
-        .populate("videos.video")
+        .populate("videos.video", "title description views thumbnail videofile likes createdAt updatedAt")
         .populate("owner", "username avatar");
 
 
@@ -173,7 +178,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
     return res
         .status(200)
         .json(
-            new Apiresponse(200, playlist, "playlist fetched")
+            new Apiresponse(200, { playlist, totalvideos: playlist.videos.length }, "playlist fetched")
         )
 
 })

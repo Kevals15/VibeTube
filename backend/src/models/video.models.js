@@ -30,14 +30,21 @@ const videoSchema = new Schema(
             type: Boolean,
             default: true
         },
-        likes: { 
-            type: Number, 
-            default: 0 
+        likes: {
+            type: Number,
+            default: 0
         },
         owner: {
             type: Schema.Types.ObjectId,
             ref: "User"
-        }
+        },
+        viewedBy: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+                default: []
+            }
+        ]
 
     },
     { timestamps: true })

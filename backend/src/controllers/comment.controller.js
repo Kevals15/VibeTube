@@ -41,30 +41,23 @@ const updateComment = asyncHandler(async (req, res) => {
     const { commentId } = req.params
     const { content } = req.body
 
-    if (!commentId) {
-        throw new ApiError(400, "comment is not exist")
+    const comment = await Comment.findById(commentId)
+
+    if (!comment) {
+        throw new ApiError(400, "Comment does not exist")
     }
 
-    if (!content || content.trim() == "") {
-        throw new ApiError(400, "content is empty or not provided")
+    if (comment.owner.toString() !== req.user?._id.toString()) {
+        throw new ApiError(403, "Not authorized to update this comment")
     }
 
-    const updatedComment = await Comment.findByIdAndUpdate(
-        commentId,
-        {
-            $set: {
-                content
-            }
-        },
-        {
-            new: true
-        }
-    )
+    comment.content = content
+    await comment.save()
 
     return res
         .status(200)
         .json(
-            new Apiresponse(200, updatedComment, "Comment add to the video")
+            new Apiresponse(200, comment, "Comment updated")
         )
 })
 
@@ -119,10 +112,12 @@ const getVideoComments = asyncHandler(async (req, res) => {
         .sort({ createdAt: -1 })
         .populate("owner", "username avatar")
 
+    const totalcomments = await Comment.countDocuments({ video: videoId })
+
     return res
         .status(200)
         .json(
-            new Apiresponse(200, comments, "comments fetched")
+            new Apiresponse(200, { comments, totalcomments }, "comments fetched")
         )
 
 })

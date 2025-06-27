@@ -59,51 +59,47 @@ const getChannelStats = asyncHandler(async (req, res) => {
                 totalvideos: stats.totalvideos,
                 totalviews: stats.totalviews,
                 totallikes: stats.totallikes,
-                totalSubscribers
+                totalSubscribers,
+                channel: {
+                    fullname: user.fullname,
+                    username: user.username,
+                    avatar: user.avatar,
+                    coverImage: user.coverImage,
+                }
             }, "Channel Stats Fetched")
         )
 })
 
 const getChannelVideos = asyncHandler(async (req, res) => {
-    // TODO: Get all the videos uploaded by the channel'
-
-
     const { page = 1, limit = 10 } = req.query
     const userId = req.user?._id
-
-    const skip = (Number(page) - 1) * Number(limit)
 
     if (!userId) {
         throw new ApiError(403, "Not authorized")
     }
 
-    const totalVideos = await Video.countDocuments({
-        owner: userId
-    })
+    const pageNum = Math.max(Number(page), 1)
+    const limitNum = Math.max(Number(limit), 1)
+    const skip = (pageNum - 1) * limitNum
 
-    const videos = await Video.find({
-        owner: req.user?._id
-    }).sort({ createdAt: -1 })
+    const totalVideos = await Video.countDocuments({ owner: userId })
+
+    const videos = await Video.find({ owner: userId })
+        .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(limit)
+        .limit(limitNum)
         .populate("owner", "username avatar")
 
-    if (!videos || videos.length == 0) {
-        throw new ApiError(400, "videos not found")
-    }
-
-    return res
-        .status(200)
-        .json(
-            new Apiresponse(200, {
-                totalVideos,
-                currentpage: Number(page),
-                totalPages: Math.ceil(totalVideos / limit),
-                videos
-            }, "videos fetched")
-        )
-
+    return res.status(200).json(
+        new Apiresponse(200, {
+            totalVideos,
+            currentpage: pageNum,
+            totalPages: Math.ceil(totalVideos / limitNum),
+            videos
+        }, videos.length ? "Videos fetched" : "No videos found for this channel")
+    )
 })
+
 
 
 export {

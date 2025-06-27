@@ -5,7 +5,7 @@ import { ApiError } from "../utils/ApiError.js";
 export const verifyJWT = asyncHandler(async (req, res, next) => {
     // It may be possible that user can send a custom header if not accessToken
     try {
-        const token = req.cookies?.accessToken || req.heaer("Authorization")?.replace("Bearer ", "");
+        const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
 
         if (!token) {
             throw new ApiError(400, "Unauthorized request")

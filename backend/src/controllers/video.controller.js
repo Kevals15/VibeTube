@@ -73,10 +73,11 @@ const getVideoById = asyncHandler(async (req, res) => {
         throw new ApiError(400, "video doesnt exist")
     }
 
-    video.views += 1
-    await video.save({
-        validateBeforeSave: false
-    })
+    if (!video.viewedBy.includes(req.user?._id)) {
+        video.views += 1;
+        video.viewedBy.push(req.user?._id)
+        await video.save()
+    }
 
     return res
         .status(200)
@@ -84,48 +85,60 @@ const getVideoById = asyncHandler(async (req, res) => {
 })
 
 const updateVideo = asyncHandler(async (req, res) => {
-    const { videoId } = req.params
-    //TODO: update video details like title, description, thumbnail
+    const { videoId } = req.params;
+    const { title, description } = req.body;
 
-    const { title, description } = req.body
+    const existingVideo = await Video.findById(videoId);
+    if (!existingVideo) {
+        throw new ApiError(404, "Video not found");
+    }
 
-    // here i can update single file thats why its req.file not files
+
+    if (existingVideo.owner.toString() !== req.user._id.toString()) {
+        throw new ApiError(403, "You are not authorized to update this video");
+    }
+
+    const updateFields = {};
+    if (title) updateFields.title = title;
+    if (description) updateFields.description = description;
+
     const thumbnailLocalpath = req.file?.path;
-
-    if (!thumbnailLocalpath) {
-        throw new ApiError(400, "thumbnail path is not provided")
+    if (thumbnailLocalpath) {
+        const thumbnail = await FileUploader(thumbnailLocalpath);
+        if (!thumbnail || !thumbnail.url) {
+            throw new ApiError(400, "Thumbnail upload failed");
+        }
+        updateFields.thumbnail = thumbnail.url;
     }
 
-    const thumbnail = await FileUploader(thumbnailLocalpath)
-
-    if (!thumbnail) {
-        throw new ApiError(400, "thumbnail is missing")
-    }
-
-    const video = await Video.findByIdAndUpdate(
+    const updatedVideo = await Video.findByIdAndUpdate(
         videoId,
-        {
-            $set: {
-                thumbnail: thumbnail.url,
-                title,
-                description
-            }
-        }, {
-        new: true
-    }
-    )
-
+        { $set: updateFields },
+        { new: true }
+    );
 
     return res
         .status(200)
-        .json(new Apiresponse(200, video, "video updated"))
-})
+        .json(new Apiresponse(200, updatedVideo, "Video updated successfully"));
+});
+
 
 const deleteVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     //TODO: delete video
 
-    const video = await Video.findByIdAndDelete(videoId).exec()
+    if (!videoId) {
+        throw new ApiError(400, "videoid is missing")
+    }
+
+    const existingVideo = await Video.findById(videoId)
+
+    let video;
+    if (req.user?._id.toString().equals(existingVideo.owner)) {
+
+        video = await Video.findByIdAndDelete(videoId).exec()
+    }
+
 
 
     if (!video) {
