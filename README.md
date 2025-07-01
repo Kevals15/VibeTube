@@ -9,7 +9,8 @@
 
 <div align="center">
 
-<img src="https://www.google.com/search?client=ms-android-oppo-terr1-rso2&sca_esv=f5575a8f6c80a422&sxsrf=AE3TifPSSuWmK_fZdB0bqANnaokXf4YS6w:1751354740586&q=animated+node+js+gif&uds=AOm0WdE2fekQnsyfYEw8JPYozOKzfM-MTDjb3m6SxNG8a6J89w1ggM5WhLTYWacEuv-afiF4uN3wCM74hkOEVEtzHMU6o_Rm2EASSHn2GUDAEqU1Qp2TdIqtIGDKtM99cdBWzdsxfiKGKvUrwsAYOyLYJ7gUYTu-Fg&udm=2&sa=X&ved=2ahUKEwi21cDpkJuOAxXkcWwGHV3UEgYQxKsJKAB6BAgHEAE&ictx=0&biw=360&bih=708&dpr=3#sv=CAMSggUa4gQKkgIKuQEStgEKd0FMa3RfdkdOTG9SVGV2SnBaNDBkWXVScE8yVXRRbDJ6UDZGVURTNFZRTzlKVnNTTUFuc296VmVtRUNoTFRfM2l1VmFrLW1WdzFKQl9mT2RTZHpLaE1HZzhkbEVZdUhwSHdwOVRVZmgyX3V2VGhndUN4R2VMbUhBEhdmWTFqYUxlMUZjVzhzZU1QbTQyYzBRURoiQUZNQUdHckdmMFJITk5yRjVNMXJpa3BRNW9EeGV3NDY0URIDODQ5GgEzIhkKAXESFGFuaW1hdGVkIG5vZGUganMgZ2lmIgcKA3RicxIAIigKBGVxbGQSIENnSUlBQkFBT2dRSUFSQUFWZE8zR2o1Z0FXM1BNUzRfErgCCs8BEswBCowBQUxrdF92RUJ6bXM0eXF5YmF4dGVVcTd5QmI4eWlYZjBBalhHSW1DeUxVME9xOERwMm1wa3QtdWJXYThqUHdUbUZyd1F4Rkdnd194a2h1LTBsR3hvTlpTeklaWDNZd3JfZE5KS0p6LTY3UDNBRTJTY1hmNGk1OFBQX0RKYnAwTm1zUlVhZTEyakFoNEoSF2ZZMWphTGUxRmNXOHNlTVBtNDJjMFFRGiJBRk1BR0dvRVcyWkJCRGRQNVZBRURmRm9ERWpFaHJFemN3EgQ0Njk4GgEzIhgKBmltZ2RpaRIORDdlZlp1UUFqb2Y3Vk0iFwoFZG9jaWQSDnBjTnhNMkZwLURkTXJNIigKBGVxbGQSIENnSUlBQkFBT2dRSUFSQUFWZE8zR2o1Z0FXM1BNUzRfKhBlLUQ3ZWZadVFBam9mN1ZNIAQqFwoBcxIQZS1EN2VmWnVRQWpvZjdWTRgBMAEYByDe4PDjBzABQAI" />
+
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="50" height="50"/>
 <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" />
 <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" />
 <img src="https://img.shields.io/badge/React.js-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
