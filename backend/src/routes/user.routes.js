@@ -53,7 +53,7 @@ router.route("/update-coverimage").patch(verifyJWT, upload.single("coverimage"),
 
 // for data which we get from url or params give same name as destructured in controller
 
-router.route("/c/:username").get(verifyJWT, getUserProfile)
+router.route("/:username").get(verifyJWT, getUserProfile)
 router.route("/watch-history").get(verifyJWT, getWatchHistory)
 
 export default router;
