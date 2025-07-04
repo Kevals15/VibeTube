@@ -9,19 +9,7 @@
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/rajput2107/rajput2107/master/Assets/nodejs.gif" width="50" height="50"/>
 
-<!-- Express.js (animated) -->
-<img src="https://raw.githubusercontent.com/rajput2107/rajput2107/master/Assets/express.gif" width="50" height="50"/>
-
-<!-- MongoDB (animated) -->
-<img src="https://raw.githubusercontent.com/rajput2107/rajput2107/master/Assets/mongodb.gif" width="50" height="50"/>
-
-<!-- React.js (animated) -->
-<img src="https://raw.githubusercontent.com/rajput2107/rajput2107/master/Assets/react.gif" width="50" height="50"/>
-
-<!-- Tailwind CSS (animated) -->
-<img src="https://raw.githubusercontent.com/itsvgdev/itsvgdev/main/icons/TailwindCSSAnimated.svg" width="50" height="50"/>
 
 
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="50" height="50"/>
