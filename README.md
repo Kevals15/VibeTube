@@ -35,20 +35,20 @@
 
 ## 📁 **Project Structure**
 
-VibeTube/
-├── backend/
-│ ├── controllers/
-│ ├── models/
-│ ├── routes/
-│ ├── middlewares/
-│ ├── utils/
-│ ├── server.js
-│ └── package.json
-├── frontend/
-│ ├── src/
-│ ├── public/
-│ └── package.json
-└── README.md
+VibeTube/ <br>
+├── backend/ <br>
+│ ├── controllers/ <br>
+│ ├── models/ <br>
+│ ├── routes/ <br>
+│ ├── middlewares/ <br>
+│ ├── utils/ <br>
+│ ├── server.js <br>
+│ └── package.json <br>
+├── frontend/ <br>
+│ ├── src/ <br>
+│ ├── public/ <br>
+│ └── package.json <br>
+└── README.md <br>
 
 
 ---
